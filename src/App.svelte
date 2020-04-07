@@ -1,5 +1,6 @@
 <script>
-  import LegendEntry from './components/LegendEntry.svelte'
+  import LegendBlock from './components/LegendBlock.svelte'
+  import Radar from "./components/Radar.svelte";
 
   export let config;
   export let dataset;
@@ -8,33 +9,56 @@
   console.log(dataset);
 </script>
 
-<main>
-  <h1>{config.title}</h1>
-  <hr/>
+<main class="main">
+  <h1 class="headline">{config.title}</h1>
 
-  {#each dataset as entry, index}
-    <LegendEntry index={index} label={entry.label} />
+  {#each config.quadrants as quadrant, index}
+    <div class="legend">
+      <LegendBlock index={index} label={quadrant.name} dataset={dataset} />
+    </div>
   {/each}
+
+  <div class="radar">
+    <Radar dataset={dataset} />
+  </div>
 </main>
 
 <style>
-  main {
-    text-align: center;
-    padding: 1em;
-    max-width: 240px;
+  :global(:root) {
+    --primary-color: #E60023;
+    --ci-gray: #695F5F;
+  }
+  .main {
+    display: grid;
+    grid-template-areas:
+            "header header header header"
+            "legend0 radar radar legend1"
+            "legend2 radar radar legend3";
+
     margin: 0 auto;
   }
 
-  h1 {
-    color: #ff3e00;
+  .headline {
+    color: var(--primary-color);
+    grid-area: header;
+    text-align: center;
     text-transform: uppercase;
-    font-size: 4em;
-    font-weight: 100;
   }
 
-  @media (min-width: 640px) {
-    main {
-      max-width: none;
-    }
+  .legend:nth-of-type(1) {
+    grid-area: legend0;
+  }
+  .legend:nth-of-type(2) {
+    grid-area: legend1;
+  }
+  .legend:nth-of-type(3) {
+    grid-area: legend2;
+  }
+  .legend:nth-of-type(4) {
+    grid-area: legend3;
+  }
+
+  .radar {
+    grid-area: radar;
   }
 </style>
