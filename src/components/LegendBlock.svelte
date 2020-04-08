@@ -1,9 +1,14 @@
 <script>
   import LegendEntry from "./LegendEntry.svelte";
+  import { stored_data } from "../stores";
 
   export let index;
   export let label;
   export let dataset;
+
+  const unsubscribe = stored_data.subscribe(value => {
+    dataset = value;
+  });
 </script>
 
 <div class="legend__block" data-ring="{index}">

@@ -1,9 +1,13 @@
 <script>
   import LegendBlock from './components/LegendBlock.svelte'
   import Radar from "./components/Radar.svelte";
+  import { stored_config, stored_data } from "./stores";
 
   export let config;
   export let dataset;
+
+  stored_config.set(config);
+  stored_data.set(dataset);
 
   console.log(config);
   console.log(dataset);
@@ -14,12 +18,12 @@
 
   {#each config.quadrants as quadrant, index}
     <div class="legend">
-      <LegendBlock index={index} label={quadrant.name} dataset={dataset} />
+      <LegendBlock index={index} label={quadrant.name} />
     </div>
   {/each}
 
   <div class="radar">
-    <Radar dataset={dataset} />
+    <Radar />
   </div>
 </main>
 
