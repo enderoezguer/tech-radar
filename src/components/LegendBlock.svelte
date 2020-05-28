@@ -1,25 +1,39 @@
 <script>
   import LegendEntry from "./LegendEntry.svelte";
-  import { stored_data } from "../stores";
+  import { stored_config, stored_data } from "../stores";
 
   export let index;
   export let label;
-  export let dataset;
 
-  const unsubscribe = stored_data.subscribe(value => {
-    dataset = value;
+  let dataset;
+  let rings;
+  let ringData;
+
+  const unsubscribeConfig = stored_config.subscribe(value => {
+    ringData = value.rings;
+  });
+
+  const unsubscribeData = stored_data.subscribe(value => {
+    rings = value.filter(item => item.quadrant === index).reduce((result, item) => {
+      if (!result[item.ring])
+        result[item.ring] = [];
+      result[item.ring].push(item);
+      return result;
+    }, []);
+    console.log(ringData);
+    console.log(rings);
   });
 </script>
 
 <div class="legend__block" data-ring="{index}">
   <h3 class="legend__blockHeadline">{label}</h3>
-  <ul>
-    {#each dataset as entry, i}
-      {#if entry.quadrant === index}
+  {#each rings as ring, r}
+    <ul>
+      {#each ring as entry, i}
         <LegendEntry index={i} label={entry.label} />
-      {/if}
-    {/each}
-  </ul>
+      {/each}
+    </ul>
+  {/each}
 </div>
 
 <style>
